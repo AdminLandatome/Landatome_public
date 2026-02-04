@@ -1,501 +1,126 @@
 <!DOCTYPE html>
+<html lang="fr">
 
-<html>
-    <head>
-        <!-- en-tête de la page -->
-        <!-- encodage des caractères -->
-        <meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Landatome</title>
-		<link rel="stylesheet" type="text/css" href="../../../mes_styles5.css">
-    </head>
+<head>
+    
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-0HCVYBLQ2L"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
 
-    <body>
-	<a href="../../../index.html">
-	<h1>Landatome</h1>
-	</a>
-	<a href="../../../profs/new_espace_prof.html">
-	<h2>Espace Prof</h2>
-	</a>
-	
-	    <div class="grille_normale" >
-		    <div class="cellule_titre_peda">
-			    06 Variables aléatoires
-		    </div>
-			
-			<a href="06_Variables_aleatoires_discretes_le_cours.pdf" target="_blank">
-		        <div class="cellule_normale">
-			        Le cours seul
-					
-			    </div>
-			</a>
-					
-		    <a href="06_Variables_aleatoires_discretes_S01.pdf" target="_blank">
-			     <div class="cellule_normale">
-			        La séquence
-			    </div>
-		    </a>
-		
-		    <a href="06_Variables_aleatoires_discretes_livret.pdf" target="_blank">
-			     <div class="cellule_normale">
-			        Le livret
-			    </div>
-		    </a>
-		
-		    <label for="maison">	      <!-- SUPPRIMER "_pas dispo" pour actuver-->
-			    <div class="cellule_normale">
-			        Exos à la maison
-			    </div>
-		    </label>	
-			<input type="checkbox" id="maison" role="button">
-			<div class="cellule_normale_condition">
-			
-			    <a href="06_variables_aleatoires_discretes_M01.pdf" target="_blank">
-		            <div class="cellule_normale">
-			        La fiche M01					
-			        </div>
-			    </a>
-				<a href="06_variables_aleatoires_discretes_M02.pdf" target="_blank">
-		            <div class="cellule_normale">
-			        La fiche M02					
-			        </div>
-			    </a>
-				<a href="06_variables_aleatoires_discretes_M03.pdf" target="_blank">
-		            <div class="cellule_normale">
-			        La fiche M03					
-			        </div>
-			    </a>
-			        
-			</div>	
-			
-			<input type="checkbox" id="D01" role="button">
-			    <div class="cellule_normale_condition">
+      gtag('config', 'G-0HCVYBLQ2L');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landatome</title>
+	<link rel="stylesheet" href="styles/landatome_styles.css">
+	<link rel="icon" type="image/png" size="16x16" href="images/MC-Escher-Impossible-Cube.png" />
+</head>
+
+<body>
+    <header>
+        <h1>Landatome</h1>
+    </header>
+
+    <nav>
+        
+        <div class="dropdown">
+            <button class="dropbtn">College</button>
+            <div class="dropdown-content">
+                <a href="11_college/Cours_de_Sixième.pdf" target="blank">Sixième (ancien programme)</a>
+				<a href="https://codimd.apps.education.fr/s/BIBjSvfhn#" target="blank">(Ce qui change en 6e)</a>
+                <a href="11_college/Cours_de_Cinquième.pdf" target="blank">Cinquième</a>
+                <a href="11_college/Cours_de_Quatrième.pdf" target="blank">Quatrième</a>
+                <a href="11_college/Cours_de_Troisième.pdf" target="blank">Troisième</a>
+				<a href="20_zone_de_test/Revisions/anglais/choix_anglais.html" target="blank">Révisions</a>
 				
-			    <a href="Seconde_DS01_V01_preparation.pdf" target="blank">
-		            <div class="cellule_normale">
-			        La préparation
-					
-			        </div>
-			    </a>
+            </div>
+        </div>
+		
+		<div class="dropdown">
+            <button class="dropbtn">Lycée</button>
+            <div class="dropdown-content">
+                <a href="00_seconde/seconde_base.html" target="_blank">Seconde</a>
+                <a href="01_premiere/premiere_base.html" target="_blank">Première</a>
+                <a href="02_terminale/terminale_base.html" target="_blank">Terminale</a>
+				<a href="#">BTS</a>
+                <a href="00_seconde/01_snt/index_snt.html" target="_blank">SNT</a>
+				<a href="pageweb/PLE_tazieff.html" target="_blank">Le PLE</a>
+            </div>
+        </div>
+		
+		
+		<div class="dropdown">
+            <button class="dropbtn">Info</button>
+            <div class="dropdown-content">
+                <a href="00_seconde/02_python/python_exercices_basthon/Python_exo_capytale_e.html" target="_blank">Python (cours/exos)</a>
+                <a href="http://www.france-ioi.org/" target="_blank">France IOI</a>
+				<a href="https://futurecoder.forge.aeif.fr/" target="blank"> Future Coder </a>
+            </div>
+        </div>
+		
+		
+		
+		<div class="dropdown">
+            <button class="dropbtn">Calculatrices et logiciels</button>
+            <div class="dropdown-content">
+			    <a href="https://www.numworks.com/fr/simulateur/" target="_blank">Numworks</a>
+				<a href="https://www.maclasseti.fr/calculatrice" target="_blank">TI-83 Premium CE</a>
+                <a href="https://www.geogebra.org/calculator" target="_blank">Geogebra (en ligne)</a>
+				<a href="https://www.geogebra.org/download?lang=fr" target="_blank">Geogebra 5</a>
+				<a href="Les_choix.html" target="_blank">Automatismes</a>
+				<a href="09_commun/Generateur_de_courbe.html" target="_blank">Générateur de Hermitte</a>
+				<a href="09_commun/Grille_notation_devoir_a_renommer.ods" target="_blank">Grille de notation</a>
+				<a href="https://adminlandatome.github.io/LANDATOME/authentification.html" target="_blank">Automatismes_maker</a>
+				<a href="https://adminlandatome.github.io/LANDATOME/authentification.html" target="_blank">CCF_maker_V1</a>
+				<a href="https://adminlandatome.github.io/LANDATOME/authentification.html" target="_blank">CCF_maker_V2</a>
+
+            </div>
+        </div>
+		<div class="dropdown">
+            <button class="dropbtn">Contact et infos</button>
+            <div class="dropdown-content">
+			    <a href="mentions_obligatoires.html" target="_blank">Voir ici</a>
 				
-			    <a href="Seconde_DS01_V01_preparation_corrige.pdf" target="blank">
-		            <div class="cellule_normale">
-			        Son corrigé
-					
-			        </div>
-			    </a>	
-				
-				<a href="Seconde_DS01_V01.pdf" target="blank">
-		            <div class="cellule_normale">
-			        Le DS
-					
-			        </div>
-			    </a>
-				
-			    <a href="Seconde_DS01C_V01.pdf" target="blank">
-		            <div class="cellule_normale">
-			        Son corrigé
-					
-			        </div>
-			    </a>	
-				
-				<a href="Seconde_DS01C_V01_bareme.pdf" target="blank">
-		            <div class="cellule_normale">
-			        Son barème
-					
-			        </div>
-			    </a>
-			
-			</div>
-			
-			
-			
+
+            </div>
+        </div>
+		<div class="dropdown">
+            <button class="dropbtn">Espace Prof</button>
+            <div class="dropdown-content">
+                <a href="authentification.html" target="blank">accès</a>
+                
+            </div>
+        </div>
 		
-	
-		    <a href="06_variables_aleatoires_discretes_E01.pdf" target="blank">
-		        <div class="cellule_normale">
-			        La fiche E01
-					
-			    </div>
+    </nav>
+    <article>
+	    
+        <section id="accueil">
+            <h2> Notre établissement </h2>
+			<a href="https://www.lyceeharountazieff.com/" target="_blank">
+                <img src="images/Logo_lycee_1.png">
 			</a>
-					
-		    <a href="06_variables_aleatoires_discretes_E01C.pdf" target="blank">
-			    <div class="cellule_normale">
-			    Son corrigé
-			    </div>
-		    </a>
-		
-		    <label for="E01C">	
-			    <div class="cellule_normale">
-			        Corrigés par exo
-			    </div>
-		    </label>	
-			<a href="06_Variables_aleatoires_discretes_R01.html" target="_blank">
-		        <div class="cellule_normale">
-			        Quiz sur le chapitre
-			    </div>
+		</section>
+        <section id="focus">
+            <h2> Focus sur  </h2>
+			<a href="https://pedagogie.ac-limoges.fr/maths/spip.php?article517" target="_blank">
+                <div align="center">Un débat sur l'IA en classe de 5e </div>
 			</a>
-			
- 	  
+		</section>
+        
 
-<!-- **********************************************************************************fiche E01C sous menu  des exos**************************************************************************** -->	    
-			<input type="checkbox" id="E01C" role="button">
-			    
-				<div class="cellule_normale_condition">
-				   
-				    <a href="06_variables_aleatoires_discretes_E01C_ex1.pdf" target="blank">
-				        <p class="exos">    
-			               Corrigé n°1
-			            </p>  
-				    </a>
-										
-					<a href="06_variables_aleatoires_discretes_E01C_ex2.pdf" target="blank">
-				        <p class="exos">    
-			               Corrigé n°2
-			            </p>  
-				    </a>
-				    <a href="06_variables_aleatoires_discretes_E01C_ex3.pdf" target="blank">
-				        <p class="exos">    
-			               Corrigé n°3
-			            </p>  
-				    </a>
-					<a href="06_variables_aleatoires_discretes_E01C_ex4.pdf" target="blank">
-				        <p class="exos">    
-			               Corrigé n°4
-			            </p>  
-				    </a>
-			    	  
-				</div>
-				
-<!-- **********************************************************************************fiche E01C fin du sous menu  des exos**************************************************************************** -->	    				
-		    <a href="06_variables_aleatoires_discretes_E02.pdf" target="blank">
-		        <div class="cellule_normale">
-			        La fiche E02
-					
-			    </div>
-			</a>
-					
-		    <a href="06_variables_aleatoires_discretes_E02C.pdf" target="blank">
-			    <div class="cellule_normale">
-			    Son corrigé
-			    </div>
-		    </a>
-		
-		    <label for="E02C">	
-			    <div class="cellule_normale">
-			        Corrigés par exo
-			    </div>
-		    </label>
-			 <div class="cellule_vide">
-			   
-			</div>
+        
 
-<!-- **********************************************************************************fiche E02C sous menu  des exos**************************************************************************** -->	    
-			<input type="checkbox" id="E02C" role="button">
-			    
-				<div class="cellule_normale_condition">
-				   
-				    <a href="06_variables_aleatoires_discretes_E02C_ex1.pdf" target="blank">
-				        <p class="exos">    
-			               Corrigé n°1
-			            </p>  
-				    </a>
-										
-					<a href="06_variables_aleatoires_discretes_E02C_ex2.pdf" target="blank">
-				        <p class="exos">    
-			               Corrigé n°2
-			            </p>  
-				    </a>
-				    <a href="06_variables_aleatoires_discretes_E02C_ex3.pdf" target="blank">
-				        <p class="exos">    
-			               Corrigé n°3
-			            </p>  
-				    </a>
-					
-			    	  
-				</div>
-
-
-
-<!-- ///////////////////////////////////////////////////////////////////////////////////fiche E02C fin du sous menu des exos////////////////////////////////////////////////////////////////////// -->	  
-
-		    <a href="06_variables_aleatoires_discretes_E03.pdf" target="blank">
-		        <div class="cellule_normale">
-			        La fiche E03
-					
-			    </div>
-			</a>
-					
-		    <a href="06_variables_aleatoires_discretes_E03C.pdf" target="blank">
-			    <div class="cellule_normale">
-			    Son corrigé
-			    </div>
-		    </a>
-		
-		    <label for="E03C">	
-			    <div class="cellule_normale">
-			        Corrigés par exo
-			    </div>
-		    </label>
-			 <div class="cellule_vide">
-			   
-			</div>
-
-<!-- **********************************************************************************fiche E03C sous menu  des exos**************************************************************************** -->	    
-			<input type="checkbox" id="E03C" role="button">
-			    
-				<div class="cellule_normale_condition">
-				   
-				    <a href="06_variables_aleatoires_discretes_E03C_ex1.pdf" target="blank">
-				        <p class="exos">    
-			               Corrigé n°1
-			            </p>  
-				    </a>
-										
-					<a href="06_variables_aleatoires_discretes_E03C_ex2.pdf" target="blank">
-				        <p class="exos">    
-			               Corrigé n°2
-			            </p>  
-				    </a>
-				    
-					
-			    	  
-				</div>
-
-
-
-<!-- ///////////////////////////////////////////////////////////////////////////////////fiche E03C fin du sous menu des exos////////////////////////////////////////////////////////////////////// -->	  
-
-
-		    <a href="06_variables_aleatoires_discretes_E04.pdf" target="blank">
-		        <div class="cellule_normale">
-			        La fiche E04
-					
-			    </div>
-			</a>
-					
-		    <a href="06_variables_aleatoires_discretes_E04C.pdf" target="blank">
-			    <div class="cellule_normale">
-			    Son corrigé
-			    </div>
-		    </a>
-		
-		    <label for="E04C">	
-			    <div class="cellule_normale">
-			        Corrigés par exo
-			    </div>
-		    </label>
-			 <div class="cellule_vide">
-			   
-			</div>
-
-<!-- **********************************************************************************fiche E03C sous menu  des exos**************************************************************************** -->	    
-			<input type="checkbox" id="E04C" role="button">
-			    
-				<div class="cellule_normale_condition">
-				   
-				    <a href="06_variables_aleatoires_discretes_E04C_ex1.pdf" target="blank">
-				        <p class="exos">    
-			               Corrigé n°1
-			            </p>  
-				    </a>
-										
-					<a href="06_variables_aleatoires_discretes_E04C_ex2.pdf" target="blank">
-				        <p class="exos">    
-			               Corrigé n°2
-			            </p>  
-				    </a>
-					<a href="06_variables_aleatoires_discretes_E04C_ex3.pdf" target="blank">
-				        <p class="exos">    
-			               Corrigé n°3
-			            </p>  
-				    </a>
-				    
-					
-			    	  
-				</div>
-
-
-
-	<!--  Les FICHES   à FAIRE
-		
-		    <a href="01_Fonctions_Affines_et_Equations_E02.pdf" target="blank">
-		        <div class="cellule_normale">
-			        La fiche E02
-					
-			    </div>
-			</a>
-					
-		    <a href="../../../bientot_dispo.html" target="blank">
-			     <div class="cellule_normale">
-			    Son corrigé
-			    </div>
-		    </a>
-		
-
-		
-		    <label for="E02C">	
-			    <div class="cellule_normale">
-			        Corrigés par exo
-			    </div>
-		    </label>	
-		    <div class="cellule_vide">
-			   
-			</div>
-    -->
-
-<!-- **********************************************************************************fiche E02C sous menu  des exos**************************************************************************** -->	    
-			<input type="checkbox" id="E02C" role="button">
-			    
-				<div class="cellule_normale_condition">
-				   
-				    <a href="../../../bientot_dispo.html" target="blank">
-				        <p class="exos">    
-			               Corrigé n°1
-			            </p>  
-				    </a>
-										
-					<a href="../../../bientot_dispo.html" target="blank">
-				        <p class="exos">    
-			               Corrigé n°2
-			            </p>  
-				    </a>
-				    <a href="../../../bientot_dispo.html" target="blank">
-				        <p class="exos">    
-			               Corrigé n°3
-			            </p>  
-				    </a>
-					<a href="../../../bientot_dispo.html" target="blank">
-				        <p class="exos">    
-			               Corrigé n°4
-			            </p>  
-				    </a>
-			    	  
-				</div>
-
-<!-- ///////////////////////////////////////////////////////////////////////////////////fiche E02C fin du sous menu des exos////////////////////////////////////////////////////////////////////// -->	 
-		
-		
-		<!--  Les FICHES   à FAIRE
-		    <a href="01_Fonctions_Affines_et_Equations_E03.pdf" target="blank">
-		        <div class="cellule_normale">
-			        La fiche E03
-					
-			    </div>
-			</a>
-					
-		    <a href="../../../bientot_dispo.html" target="blank">
-			     <div class="cellule_normale">
-			    Son corrigé
-			    </div>
-		    </a>
-		
-		   		
-		    <label for="E03C">	
-			    <div class="cellule_normale">
-			        Corrigés par exo
-			    </div>
-		    </label>
-			<div class="cellule_vide">
-			   
-			</div>
-	  
-	    -->
-
-<!-- **********************************************************************************fiche E03C sous menu  des exos**************************************************************************** -->	    
-			<input type="checkbox" id="E03C" role="button">
-			    
-				<div class="cellule_normale_condition">
-				   
-				    <a href="../../../bientot_dispo.html" target="blank">
-				        <p class="exos">    
-			               Corrigé n°1
-			            </p>  
-				    </a>
-										
-					<a href="../../../bientot_dispo.html" target="blank">
-				        <p class="exos">    
-			               Corrigé n°2
-			            </p>  
-				    </a>
-				    <a href="../../../bientot_dispo.html" target="blank">
-				        <p class="exos">    
-			               Corrigé n°3
-			            </p>  
-				    </a>
-					<a href="../../../bientot_dispo.html" target="blank">
-				        <p class="exos">    
-			               Corrigé n°4
-			            </p>  
-				    </a>
-			    	  
-				</div>
-
-<!-- ///////////////////////////////////////////////////////////////////////////////////fiche E03C fin du sous menu des exos////////////////////////////////////////////////////////////////////// -->			
-		
-		
-		<!--  Les FICHES   à FAIRE
-		    <a href="01_Fonctions_Affines_et_Equations_E04.pdf" target="blank">
-		        <div class="cellule_normale">
-			        La fiche E04
-					
-			    </div>
-			</a>
-					
-		    <a href="../../../bientot_dispo.html" target="blank">
-			     <div class="cellule_normale">
-			    Son corrigé
-			    </div>
-		    </a>
-		
+        
+	</article>
+	<footer>
 		    
-		
-		    <label for="E04C">	
-			    <div class="cellule_normale">
-			        Corrigés par exo
-			    </div>
-		    </label>
-            <div class="cellule_vide">
-			   
-			</div>			
-        -->
+            <p>&copy; 2024 Thomas Szczebara. | Licence : <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC-NC-SA 4.0</a></p>
+    </footer>
+</body>
 
-<!-- **********************************************************************************fiche E04C sous menu  des exos**************************************************************************** -->	    
-			<input type="checkbox" id="E04C" role="button">
-			    
-				<div class="cellule_normale_condition">
-				   
-				    <a href="../../../bientot_dispo.html" target="blank">
-				        <p class="exos">    
-			               Corrigé n°1
-			            </p>  
-				    </a>
-										
-					<a href="../../../bientot_dispo.html" target="blank">
-				        <p class="exos">    
-			               Corrigé n°2
-			            </p>  
-				    </a>
-				    <a href="../../../bientot_dispo.html" target="blank">
-				        <p class="exos">    
-			               Corrigé n°3
-			            </p>  
-				    </a>
-					<a href="../../../bientot_dispo.html" target="blank">
-				        <p class="exos">    
-			               Corrigé n°4
-			            </p>  
-				    </a>
-			    	  
-				</div>
-
-<!-- ///////////////////////////////////////////////////////////////////////////////////fiche E04C fin du sous menu des exos////////////////////////////////////////////////////////////////////// -->	 
-
-		  
-				
-		</div> 
-	
-	   	
-
-    </body>
 </html>
