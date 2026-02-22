@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Automatismes</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/png" href="https://AdminLandatome.github.io/LANDATOME/00_images/MC-Escher-Impossible-Cube.png"/>
+<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI",Helvetica,Arial,sans-serif;background:#f0f2f5;color:#1a1a2e}
+.diapo-wrapper{display:none;flex-direction:column;min-height:100vh}
+.diapo-wrapper.active{display:flex}
+.diapo-nav{display:flex;align-items:center;justify-content:space-between;background:#1d3557;color:#fff;padding:10px 20px;user-select:none}
+.diapo-nav .nav-titre{font-weight:700;font-size:1rem;letter-spacing:.03em}
+.diapo-nav .nav-pos{font-size:.8rem;opacity:.65}
+.diapo-nav button{background:rgba(255,255,255,.15);border:none;color:#fff;padding:8px 18px;border-radius:6px;font-size:.9rem;font-weight:700;cursor:pointer;transition:background .15s}
+.diapo-nav button:hover{background:rgba(255,255,255,.3)}
+.diapo-nav button:disabled{opacity:.3;cursor:default}
+.diapo-content{flex:1;padding:28px 36px;max-width:960px;margin:0 auto;width:100%}
+.slide-annonce{display:flex;align-items:center;justify-content:center;flex:1;min-height:60vh}
+.titre_annonce{font-size:2.5rem;font-weight:900;color:#1d3557;text-align:center;letter-spacing:.05em}
+.consigne{font-size:.95rem;line-height:1.8;color:#333;background:#f8f9fa;border-left:4px solid #457b9d;padding:16px 20px;border-radius:0 8px 8px 0;max-width:700px;margin:40px auto}
+[class*="_cellule_reponse"]{padding:10px 14px;border:2px solid #ccc;border-radius:8px;font-size:.93rem;line-height:1.5;background:#fff}
+[class*="_cellule_reponse"][class$="_vrai"]{background:#fff9c4;border-color:#f4c430;font-weight:700}
+[class*="_cellule_question"]{font-size:1rem;font-weight:600;line-height:1.6;padding:12px 0 10px 0;color:#1a1a2e}
+[class*="_cellule_explication_avec"]{background:#fff9c4;border:2px solid #f4c430;border-radius:8px;padding:14px 16px;font-size:.93rem;line-height:1.6;margin-top:8px}
+[class*="_cellule_explication_sans"]{display:none}
+[class*="_cellule_graphique"]{display:flex;justify-content:center;align-items:center;padding:8px 0}
+[class*="_cellule_graphique"] svg,[class*="_cellule_graphique"] img{max-width:100%;height:auto}
+.format01_grille{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.format01_cellule_question{grid-column:1/-1}
+.format01_cellule_reponse1_faux,.format01_cellule_reponse1_vrai{grid-column:1;grid-row:2}
+.format01_cellule_reponse2_faux,.format01_cellule_reponse2_vrai{grid-column:2;grid-row:2}
+.format01_cellule_reponse3_faux,.format01_cellule_reponse3_vrai{grid-column:1;grid-row:3}
+.format01_cellule_reponse4_faux,.format01_cellule_reponse4_vrai{grid-column:2;grid-row:3}
+.format01_cellule_explication_sans,.format01_cellule_explication_avec{grid-column:1/-1}
+.format02_grille{display:grid;grid-template-columns:1fr 220px;gap:8px}
+.format02_cellule_question{grid-column:1;grid-row:1}
+.format02_cellule_reponse1_faux,.format02_cellule_reponse1_vrai{grid-column:1;grid-row:2}
+.format02_cellule_reponse2_faux,.format02_cellule_reponse2_vrai{grid-column:1;grid-row:3}
+.format02_cellule_reponse3_faux,.format02_cellule_reponse3_vrai{grid-column:1;grid-row:4}
+.format02_cellule_reponse4_faux,.format02_cellule_reponse4_vrai{grid-column:1;grid-row:5}
+.format02_cellule_explication_sans,.format02_cellule_explication_avec{grid-column:1;grid-row:6}
+.format02_cellule_graphique{grid-column:2;grid-row:1/7;align-self:center}
+.format03_grille{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.format03_cellule_question{grid-column:1/-1}
+.format03_cellule_reponse1_faux,.format03_cellule_reponse1_vrai{grid-column:1}
+.format03_cellule_reponse2_faux,.format03_cellule_reponse2_vrai{grid-column:2}
+.format03_cellule_reponse3_faux,.format03_cellule_reponse3_vrai{grid-column:1}
+.format03_cellule_reponse4_faux,.format03_cellule_reponse4_vrai{grid-column:2}
+.format03_cellule_explication_sans,.format03_cellule_explication_avec{grid-column:1/-1}
+.format04_grille{display:grid;grid-template-columns:1fr;gap:8px}
+.format05_grille{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.format05_cellule_question{grid-column:1/-1}
+.format05_cellule_reponse1_faux,.format05_cellule_reponse1_vrai{grid-column:1}
+.format05_cellule_reponse2_faux,.format05_cellule_reponse2_vrai{grid-column:2}
+.format05_cellule_reponse3_faux,.format05_cellule_reponse3_vrai{grid-column:1}
+.format05_cellule_reponse4_faux,.format05_cellule_reponse4_vrai{grid-column:2}
+.format05_cellule_explication_sans,.format05_cellule_explication_avec{grid-column:1/-1}
+.format05_cellule_graphique{grid-column:1/-1;display:flex;justify-content:center}
+.format08_grille{display:grid;grid-template-columns:1fr 280px;gap:8px}
+.format08_cellule_question{grid-column:1}
+.format08_cellule_reponse1_faux,.format08_cellule_reponse1_vrai,
+.format08_cellule_reponse2_faux,.format08_cellule_reponse2_vrai,
+.format08_cellule_reponse3_faux,.format08_cellule_reponse3_vrai,
+.format08_cellule_reponse4_faux,.format08_cellule_reponse4_vrai,
+.format08_cellule_explication_sans,.format08_cellule_explication_avec{grid-column:1}
+.format08_cellule_graphique{grid-column:2;grid-row:1/8;align-self:center;display:flex;justify-content:center}
+</style>
+</head>
+<body>
+<div class="diapo-wrapper active" id="s0">
+  <div class="diapo-nav">
+    <button onclick="va(-1)" disabled>&#9664; Précédent</button>
+    <div><div class="nav-titre">Automatismes</div><div class="nav-pos">1 / 39</div></div>
+    <button onclick="va(1)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="slide-annonce"><div class="titre_annonce">Automatismes</div></div></div>
+</div>
+<div class="diapo-wrapper" id="s1">
+  <div class="diapo-nav">
+    <button onclick="va(0)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Consignes</div><div class="nav-pos">2 / 39</div></div>
+    <button onclick="va(2)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="consigne">Aucune justification n'est demandée et une seule réponse est possible par question.<br>Pour chaque question, reportez son numéro sur votre copie et indiquez votre réponse.<br><br>Si la question n'est pas un QCM alors la consigne est :<br><br>Donnez vos réponses sans justification<br>(vous pouvez, par contre, faire des calculs au brouillon)</div></div>
+</div>
+<div class="diapo-wrapper" id="s2">
+  <div class="diapo-nav">
+    <button onclick="va(1)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Question 1 / 18</div><div class="nav-pos">3 / 39</div></div>
+    <button onclick="va(3)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">1) On donne la fonction \(h\) définie pour tout réel \(x\) par : \(h(x)=x^{8}+4x^3-12x+378\).<br>Donner l'expression de \(h'(x)\)</div>
+  <div class="format05_cellule_explication_sans"></div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s3">
+  <div class="diapo-nav">
+    <button onclick="va(2)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Réponse 1 / 18</div><div class="nav-pos">4 / 39</div></div>
+    <button onclick="va(4)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">1) On donne la fonction \(h\) définie pour tout réel \(x\) par : \(h(x)=x^{8}+4x^3-12x+378\).<br>Donner l'expression de \(h'(x)\)</div>
+  <div class="format05_cellule_explication_avec">La fonction \(h\) est une combinaison linéraire de fonctions de référence toutes dérivables sur \(\mathbb{R}\).<br>\(h\) est donc dérivable sur \(\mathbb{R}\) et pour tout réel \(x\),<br><br>\[h'(x)=8x^{7}+12x^2-12\]</div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s4">
+  <div class="diapo-nav">
+    <button onclick="va(3)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Question 2 / 18</div><div class="nav-pos">5 / 39</div></div>
+    <button onclick="va(5)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">2) On donne la fonction \(f\) définie pour tout réel non nul \(x\) par : \[f(x)=-9x^3+21x^2+208x-216+\frac{263}{x}\]Donner l'expression de \(f'(x)\)</div>
+  <div class="format05_cellule_explication_sans"></div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s5">
+  <div class="diapo-nav">
+    <button onclick="va(4)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Réponse 2 / 18</div><div class="nav-pos">6 / 39</div></div>
+    <button onclick="va(6)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">2) On donne la fonction \(f\) définie pour tout réel non nul \(x\) par : \[f(x)=-9x^3+21x^2+208x-216+\frac{263}{x}\]Donner l'expression de \(f'(x)\)</div>
+  <div class="format05_cellule_explication_avec">La fonction \(f\) est une combinaison linéraire de fonctions de référence toutes dérivables sur \(\mathbb{R}\backslash\lbrace{0}\rbrace \).<br>\(f\) est donc dérivable sur \(\mathbb{R}\backslash\lbrace{0}\rbrace \) et pour tout  \(x\in\mathbb{R}\backslash\lbrace{0}\rbrace \),\[f'(x)=-27x^2+42x+208-\frac{263}{x^2}\]</div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s6">
+  <div class="diapo-nav">
+    <button onclick="va(5)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Question 3 / 18</div><div class="nav-pos">7 / 39</div></div>
+    <button onclick="va(7)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">3) On donne la fonction \(g\) définie pour tout réel non nul \(x\) par : \[g(x)=-8x^3-22x^2+143x-270-\frac{155}{x}\]Donner l'expression de \(g'(x)\)</div>
+  <div class="format05_cellule_explication_sans"></div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s7">
+  <div class="diapo-nav">
+    <button onclick="va(6)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Réponse 3 / 18</div><div class="nav-pos">8 / 39</div></div>
+    <button onclick="va(8)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">3) On donne la fonction \(g\) définie pour tout réel non nul \(x\) par : \[g(x)=-8x^3-22x^2+143x-270-\frac{155}{x}\]Donner l'expression de \(g'(x)\)</div>
+  <div class="format05_cellule_explication_avec">La fonction \(g\) est une combinaison linéraire de fonctions de référence toutes dérivables sur \(\mathbb{R}\backslash\lbrace{0}\rbrace \).<br>\(g\) est donc dérivable sur \(\mathbb{R}\backslash\lbrace{0}\rbrace \) et pour tout  \(x\in\mathbb{R}\backslash\lbrace{0}\rbrace \),\[g'(x)=-24x^2-44x+143+\frac{155}{x^2}\]</div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s8">
+  <div class="diapo-nav">
+    <button onclick="va(7)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Question 4 / 18</div><div class="nav-pos">9 / 39</div></div>
+    <button onclick="va(9)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">4) On donne la fonction \(h\) définie pour tout  \(x\in\mathbb{R}\backslash\lbrace{2}\rbrace\) par : \[h(x)=\frac{1}{2x-4}\]Donner l'expression de \(h'(x)\)</div>
+  <div class="format05_cellule_explication_sans"></div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s9">
+  <div class="diapo-nav">
+    <button onclick="va(8)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Réponse 4 / 18</div><div class="nav-pos">10 / 39</div></div>
+    <button onclick="va(10)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">4) On donne la fonction \(h\) définie pour tout  \(x\in\mathbb{R}\backslash\lbrace{2}\rbrace\) par : \[h(x)=\frac{1}{2x-4}\]Donner l'expression de \(h'(x)\)</div>
+  <div class="format05_cellule_explication_avec">La fonction \(h\) est l'inverse d'une fonction dérivable qui ne s'annule pas sur \(\mathbb{R}\backslash\lbrace{2}\rbrace \).<br>\(h\) est donc dérivable sur \(\mathbb{R}\backslash\lbrace{2}\rbrace \) et pour tout  \(x\in\mathbb{R}\backslash\lbrace{2}\rbrace \),\[h'(x)=\frac{-2}{(2x-4)^2}\]</div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s10">
+  <div class="diapo-nav">
+    <button onclick="va(9)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Question 5 / 18</div><div class="nav-pos">11 / 39</div></div>
+    <button onclick="va(11)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">5) On donne la fonction \(h\) définie pour tout réel \(x\) par : \(h(x)=-14x^3+10x^2-252x+196\).<br>Donner l'expression de \(h'(x)\)</div>
+  <div class="format05_cellule_explication_sans"></div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s11">
+  <div class="diapo-nav">
+    <button onclick="va(10)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Réponse 5 / 18</div><div class="nav-pos">12 / 39</div></div>
+    <button onclick="va(12)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">5) On donne la fonction \(h\) définie pour tout réel \(x\) par : \(h(x)=-14x^3+10x^2-252x+196\).<br>Donner l'expression de \(h'(x)\)</div>
+  <div class="format05_cellule_explication_avec">La fonction \(h\) est une combinaison linéraire de fonctions de référence toutes dérivables sur \(\mathbb{R}\).<br>\(h\) est donc dérivable sur \(\mathbb{R}\) et pour tout réel \(x\),<br><br>\[h'(x)=-42x^2+20x-252\]</div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s12">
+  <div class="diapo-nav">
+    <button onclick="va(11)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Question 6 / 18</div><div class="nav-pos">13 / 39</div></div>
+    <button onclick="va(13)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">6) On donne la fonction \(g\) définie pour tout réel \(x\) par \(g(x)=-21x^2-149x+477\).<br>Donner l'expression de \(g'(x)\)</div>
+  <div class="format05_cellule_explication_sans"></div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s13">
+  <div class="diapo-nav">
+    <button onclick="va(12)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Réponse 6 / 18</div><div class="nav-pos">14 / 39</div></div>
+    <button onclick="va(14)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">6) On donne la fonction \(g\) définie pour tout réel \(x\) par \(g(x)=-21x^2-149x+477\).<br>Donner l'expression de \(g'(x)\)</div>
+  <div class="format05_cellule_explication_avec">La fonction \(g\) est une combinaison linéraire de fonctions de référence toutes dérivables sur \(\mathbb{R}\).<br>\(g\) est donc dérivable sur \(\mathbb{R}\) et pour tout réel \(x\),<br><br>\[g'(x)=-42x-149\]</div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s14">
+  <div class="diapo-nav">
+    <button onclick="va(13)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Question 7 / 18</div><div class="nav-pos">15 / 39</div></div>
+    <button onclick="va(15)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">7) On donne la fonction \(h\) définie pour tout réel \(x\) par : \(h(x)=-6x^{10}-4x^4-7x+326\).<br>Donner l'expression de \(h'(x)\)</div>
+  <div class="format05_cellule_explication_sans"></div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s15">
+  <div class="diapo-nav">
+    <button onclick="va(14)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Réponse 7 / 18</div><div class="nav-pos">16 / 39</div></div>
+    <button onclick="va(16)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">7) On donne la fonction \(h\) définie pour tout réel \(x\) par : \(h(x)=-6x^{10}-4x^4-7x+326\).<br>Donner l'expression de \(h'(x)\)</div>
+  <div class="format05_cellule_explication_avec">La fonction \(h\) est une combinaison linéraire de fonctions de référence toutes dérivables sur \(\mathbb{R}\).<br>\(h\) est donc dérivable sur \(\mathbb{R}\) et pour tout réel \(x\),<br><br>\[h'(x)=-60x^{9}-16x^3-7\]</div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s16">
+  <div class="diapo-nav">
+    <button onclick="va(15)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Question 8 / 18</div><div class="nav-pos">17 / 39</div></div>
+    <button onclick="va(17)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">8) On donne la fonction \(f\) définie pour tout réel non nul \(x\) par : \[f(x)=-3x^3+19x^2+482x-262-\frac{328}{x}\]Donner l'expression de \(f'(x)\)</div>
+  <div class="format05_cellule_explication_sans"></div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s17">
+  <div class="diapo-nav">
+    <button onclick="va(16)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Réponse 8 / 18</div><div class="nav-pos">18 / 39</div></div>
+    <button onclick="va(18)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">8) On donne la fonction \(f\) définie pour tout réel non nul \(x\) par : \[f(x)=-3x^3+19x^2+482x-262-\frac{328}{x}\]Donner l'expression de \(f'(x)\)</div>
+  <div class="format05_cellule_explication_avec">La fonction \(f\) est une combinaison linéraire de fonctions de référence toutes dérivables sur \(\mathbb{R}\backslash\lbrace{0}\rbrace \).<br>\(f\) est donc dérivable sur \(\mathbb{R}\backslash\lbrace{0}\rbrace \) et pour tout  \(x\in\mathbb{R}\backslash\lbrace{0}\rbrace \),\[f'(x)=-9x^2+38x+482+\frac{328}{x^2}\]</div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s18">
+  <div class="diapo-nav">
+    <button onclick="va(17)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Question 9 / 18</div><div class="nav-pos">19 / 39</div></div>
+    <button onclick="va(19)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">9) On donne la fonction \(g\) définie pour tout réel non nul \(x\) par : \[g(x)=-14x^3+10x^2+95x+71-\frac{239}{x}\]Donner l'expression de \(g'(x)\)</div>
+  <div class="format05_cellule_explication_sans"></div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s19">
+  <div class="diapo-nav">
+    <button onclick="va(18)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Réponse 9 / 18</div><div class="nav-pos">20 / 39</div></div>
+    <button onclick="va(20)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">9) On donne la fonction \(g\) définie pour tout réel non nul \(x\) par : \[g(x)=-14x^3+10x^2+95x+71-\frac{239}{x}\]Donner l'expression de \(g'(x)\)</div>
+  <div class="format05_cellule_explication_avec">La fonction \(g\) est une combinaison linéraire de fonctions de référence toutes dérivables sur \(\mathbb{R}\backslash\lbrace{0}\rbrace \).<br>\(g\) est donc dérivable sur \(\mathbb{R}\backslash\lbrace{0}\rbrace \) et pour tout  \(x\in\mathbb{R}\backslash\lbrace{0}\rbrace \),\[g'(x)=-42x^2+20x+95+\frac{239}{x^2}\]</div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s20">
+  <div class="diapo-nav">
+    <button onclick="va(19)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Question 10 / 18</div><div class="nav-pos">21 / 39</div></div>
+    <button onclick="va(21)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">10) On donne la fonction \(f\) définie pour tout  \(x\in\mathbb{R}\backslash\lbrace{5}\rbrace\) par : \[f(x)=\frac{1}{x-5}\]Donner l'expression de \(f'(x)\)</div>
+  <div class="format05_cellule_explication_sans"></div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s21">
+  <div class="diapo-nav">
+    <button onclick="va(20)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Réponse 10 / 18</div><div class="nav-pos">22 / 39</div></div>
+    <button onclick="va(22)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">10) On donne la fonction \(f\) définie pour tout  \(x\in\mathbb{R}\backslash\lbrace{5}\rbrace\) par : \[f(x)=\frac{1}{x-5}\]Donner l'expression de \(f'(x)\)</div>
+  <div class="format05_cellule_explication_avec">La fonction \(f\) est l'inverse d'une fonction dérivable qui ne s'annule pas sur \(\mathbb{R}\backslash\lbrace{5}\rbrace \).<br>\(f\) est donc dérivable sur \(\mathbb{R}\backslash\lbrace{5}\rbrace \) et pour tout  \(x\in\mathbb{R}\backslash\lbrace{5}\rbrace \),\[f'(x)=\frac{-1}{(x-5)^2}\]</div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s22">
+  <div class="diapo-nav">
+    <button onclick="va(21)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Question 11 / 18</div><div class="nav-pos">23 / 39</div></div>
+    <button onclick="va(23)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">11) On donne la fonction \(h\) définie pour tout réel \(x\) par : \(h(x)=-10x^3+16x^2+388x+393\).<br>Donner l'expression de \(h'(x)\)</div>
+  <div class="format05_cellule_explication_sans"></div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s23">
+  <div class="diapo-nav">
+    <button onclick="va(22)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Réponse 11 / 18</div><div class="nav-pos">24 / 39</div></div>
+    <button onclick="va(24)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">11) On donne la fonction \(h\) définie pour tout réel \(x\) par : \(h(x)=-10x^3+16x^2+388x+393\).<br>Donner l'expression de \(h'(x)\)</div>
+  <div class="format05_cellule_explication_avec">La fonction \(h\) est une combinaison linéraire de fonctions de référence toutes dérivables sur \(\mathbb{R}\).<br>\(h\) est donc dérivable sur \(\mathbb{R}\) et pour tout réel \(x\),<br><br>\[h'(x)=-30x^2+32x+388\]</div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s24">
+  <div class="diapo-nav">
+    <button onclick="va(23)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Question 12 / 18</div><div class="nav-pos">25 / 39</div></div>
+    <button onclick="va(25)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">12) On donne la fonction \(h\) définie pour tout réel \(x\) par \(h(x)=22x^2+132x-78\).<br>Donner l'expression de \(h'(x)\)</div>
+  <div class="format05_cellule_explication_sans"></div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s25">
+  <div class="diapo-nav">
+    <button onclick="va(24)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Réponse 12 / 18</div><div class="nav-pos">26 / 39</div></div>
+    <button onclick="va(26)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">12) On donne la fonction \(h\) définie pour tout réel \(x\) par \(h(x)=22x^2+132x-78\).<br>Donner l'expression de \(h'(x)\)</div>
+  <div class="format05_cellule_explication_avec">La fonction \(h\) est une combinaison linéraire de fonctions de référence toutes dérivables sur \(\mathbb{R}\).<br>\(h\) est donc dérivable sur \(\mathbb{R}\) et pour tout réel \(x\),<br><br>\[h'(x)=44x+132\]</div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s26">
+  <div class="diapo-nav">
+    <button onclick="va(25)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Question 13 / 18</div><div class="nav-pos">27 / 39</div></div>
+    <button onclick="va(27)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">13) On donne la fonction \(g\) définie pour tout réel \(x\) par : \(g(x)=-5x^{9}+2x^4+20x+187\).<br>Donner l'expression de \(g'(x)\)</div>
+  <div class="format05_cellule_explication_sans"></div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s27">
+  <div class="diapo-nav">
+    <button onclick="va(26)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Réponse 13 / 18</div><div class="nav-pos">28 / 39</div></div>
+    <button onclick="va(28)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">13) On donne la fonction \(g\) définie pour tout réel \(x\) par : \(g(x)=-5x^{9}+2x^4+20x+187\).<br>Donner l'expression de \(g'(x)\)</div>
+  <div class="format05_cellule_explication_avec">La fonction \(g\) est une combinaison linéraire de fonctions de référence toutes dérivables sur \(\mathbb{R}\).<br>\(g\) est donc dérivable sur \(\mathbb{R}\) et pour tout réel \(x\),<br><br>\[g'(x)=-45x^{8}+8x^3+20\]</div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s28">
+  <div class="diapo-nav">
+    <button onclick="va(27)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Question 14 / 18</div><div class="nav-pos">29 / 39</div></div>
+    <button onclick="va(29)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">14) On donne la fonction \(g\) définie pour tout réel non nul \(x\) par : \[g(x)=-6x^3-14x^2-201x+444+\frac{426}{x}\]Donner l'expression de \(g'(x)\)</div>
+  <div class="format05_cellule_explication_sans"></div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s29">
+  <div class="diapo-nav">
+    <button onclick="va(28)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Réponse 14 / 18</div><div class="nav-pos">30 / 39</div></div>
+    <button onclick="va(30)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">14) On donne la fonction \(g\) définie pour tout réel non nul \(x\) par : \[g(x)=-6x^3-14x^2-201x+444+\frac{426}{x}\]Donner l'expression de \(g'(x)\)</div>
+  <div class="format05_cellule_explication_avec">La fonction \(g\) est une combinaison linéraire de fonctions de référence toutes dérivables sur \(\mathbb{R}\backslash\lbrace{0}\rbrace \).<br>\(g\) est donc dérivable sur \(\mathbb{R}\backslash\lbrace{0}\rbrace \) et pour tout  \(x\in\mathbb{R}\backslash\lbrace{0}\rbrace \),\[g'(x)=-18x^2-28x-201-\frac{426}{x^2}\]</div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s30">
+  <div class="diapo-nav">
+    <button onclick="va(29)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Question 15 / 18</div><div class="nav-pos">31 / 39</div></div>
+    <button onclick="va(31)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">15) On donne la fonction \(h\) définie pour tout réel non nul \(x\) par : \[h(x)=x^3+25x^2-248x+227+\frac{163}{x}\]Donner l'expression de \(h'(x)\)</div>
+  <div class="format05_cellule_explication_sans"></div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s31">
+  <div class="diapo-nav">
+    <button onclick="va(30)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Réponse 15 / 18</div><div class="nav-pos">32 / 39</div></div>
+    <button onclick="va(32)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">15) On donne la fonction \(h\) définie pour tout réel non nul \(x\) par : \[h(x)=x^3+25x^2-248x+227+\frac{163}{x}\]Donner l'expression de \(h'(x)\)</div>
+  <div class="format05_cellule_explication_avec">La fonction \(h\) est une combinaison linéraire de fonctions de référence toutes dérivables sur \(\mathbb{R}\backslash\lbrace{0}\rbrace \).<br>\(h\) est donc dérivable sur \(\mathbb{R}\backslash\lbrace{0}\rbrace \) et pour tout  \(x\in\mathbb{R}\backslash\lbrace{0}\rbrace \),\[h'(x)=3x^2+50x-248-\frac{163}{x^2}\]</div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s32">
+  <div class="diapo-nav">
+    <button onclick="va(31)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Question 16 / 18</div><div class="nav-pos">33 / 39</div></div>
+    <button onclick="va(33)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">16) On donne la fonction \(g\) définie pour tout  \(x\in\mathbb{R}\backslash\lbrace{-\frac{8}{7}}\rbrace\) par : \[g(x)=\frac{1}{-7x-8}\]Donner l'expression de \(g'(x)\)</div>
+  <div class="format05_cellule_explication_sans"></div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s33">
+  <div class="diapo-nav">
+    <button onclick="va(32)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Réponse 16 / 18</div><div class="nav-pos">34 / 39</div></div>
+    <button onclick="va(34)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">16) On donne la fonction \(g\) définie pour tout  \(x\in\mathbb{R}\backslash\lbrace{-\frac{8}{7}}\rbrace\) par : \[g(x)=\frac{1}{-7x-8}\]Donner l'expression de \(g'(x)\)</div>
+  <div class="format05_cellule_explication_avec">La fonction \(g\) est l'inverse d'une fonction dérivable qui ne s'annule pas sur \(\mathbb{R}\backslash\lbrace{-\frac{8}{7}}\rbrace \).<br>\(g\) est donc dérivable sur \(\mathbb{R}\backslash\lbrace{-\frac{8}{7}}\rbrace \) et pour tout  \(x\in\mathbb{R}\backslash\lbrace{-\frac{8}{7}}\rbrace \),\[g'(x)=\frac{7}{(-7x-8)^2}\]</div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s34">
+  <div class="diapo-nav">
+    <button onclick="va(33)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Question 17 / 18</div><div class="nav-pos">35 / 39</div></div>
+    <button onclick="va(35)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">17) On donne la fonction \(h\) définie pour tout réel \(x\) par : \(h(x)=-15x^3-16x^2+202x+290\).<br>Donner l'expression de \(h'(x)\)</div>
+  <div class="format05_cellule_explication_sans"></div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s35">
+  <div class="diapo-nav">
+    <button onclick="va(34)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Réponse 17 / 18</div><div class="nav-pos">36 / 39</div></div>
+    <button onclick="va(36)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">17) On donne la fonction \(h\) définie pour tout réel \(x\) par : \(h(x)=-15x^3-16x^2+202x+290\).<br>Donner l'expression de \(h'(x)\)</div>
+  <div class="format05_cellule_explication_avec">La fonction \(h\) est une combinaison linéraire de fonctions de référence toutes dérivables sur \(\mathbb{R}\).<br>\(h\) est donc dérivable sur \(\mathbb{R}\) et pour tout réel \(x\),<br><br>\[h'(x)=-45x^2-32x+202\]</div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s36">
+  <div class="diapo-nav">
+    <button onclick="va(35)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Question 18 / 18</div><div class="nav-pos">37 / 39</div></div>
+    <button onclick="va(37)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">18) On donne la fonction \(g\) définie pour tout réel \(x\) par \(g(x)=25x^2-190x+187\).<br>Donner l'expression de \(g'(x)\)</div>
+  <div class="format05_cellule_explication_sans"></div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s37">
+  <div class="diapo-nav">
+    <button onclick="va(36)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Réponse 18 / 18</div><div class="nav-pos">38 / 39</div></div>
+    <button onclick="va(38)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">18) On donne la fonction \(g\) définie pour tout réel \(x\) par \(g(x)=25x^2-190x+187\).<br>Donner l'expression de \(g'(x)\)</div>
+  <div class="format05_cellule_explication_avec">La fonction \(g\) est une combinaison linéraire de fonctions de référence toutes dérivables sur \(\mathbb{R}\).<br>\(g\) est donc dérivable sur \(\mathbb{R}\) et pour tout réel \(x\),<br><br>\[g'(x)=50x-190\]</div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s38">
+  <div class="diapo-nav">
+    <button onclick="va(37)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Fin</div><div class="nav-pos">39 / 39</div></div>
+    <button onclick="va(39)" disabled>Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="slide-annonce"><div class="titre_annonce">Fin</div></div></div>
+</div>
+<script>
+var _i=0,_t=39;
+function va(n){
+  if(n<0||n>=_t)return;
+  document.getElementById('s'+_i).classList.remove('active');
+  _i=n;
+  var el=document.getElementById('s'+_i);
+  el.classList.add('active');
+  if(window.MathJax&&MathJax.Hub)MathJax.Hub.Queue(['Typeset',MathJax.Hub,el]);
+  window.scrollTo(0,0);
+}
+document.addEventListener('keydown',function(e){
+  if(e.key==='ArrowRight'||e.key===' ')va(_i+1);
+  if(e.key==='ArrowLeft')va(_i-1);
+});
+</script>
+</body>
+</html>
