@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Automatismes</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/png" href="https://AdminLandatome.github.io/LANDATOME/00_images/MC-Escher-Impossible-Cube.png"/>
+<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI",Helvetica,Arial,sans-serif;background:#f0f2f5;color:#1a1a2e}
+.diapo-wrapper{display:none;flex-direction:column;min-height:100vh}
+.diapo-wrapper.active{display:flex}
+.diapo-nav{display:flex;align-items:center;justify-content:space-between;background:#1d3557;color:#fff;padding:10px 20px;user-select:none}
+.diapo-nav .nav-titre{font-weight:700;font-size:1rem;letter-spacing:.03em}
+.diapo-nav .nav-pos{font-size:.8rem;opacity:.65}
+.diapo-nav button{background:rgba(255,255,255,.15);border:none;color:#fff;padding:8px 18px;border-radius:6px;font-size:.9rem;font-weight:700;cursor:pointer;transition:background .15s}
+.diapo-nav button:hover{background:rgba(255,255,255,.3)}
+.diapo-nav button:disabled{opacity:.3;cursor:default}
+.diapo-content{flex:1;padding:28px 36px;max-width:960px;margin:0 auto;width:100%}
+.slide-annonce{display:flex;align-items:center;justify-content:center;flex:1;min-height:60vh}
+.titre_annonce{font-size:2.5rem;font-weight:900;color:#1d3557;text-align:center;letter-spacing:.05em}
+.consigne{font-size:.95rem;line-height:1.8;color:#333;background:#f8f9fa;border-left:4px solid #457b9d;padding:16px 20px;border-radius:0 8px 8px 0;max-width:700px;margin:40px auto}
+[class*="_cellule_reponse"]{padding:10px 14px;border:2px solid #ccc;border-radius:8px;font-size:.93rem;line-height:1.5;background:#fff}
+[class*="_cellule_reponse"][class$="_vrai"]{background:#fff9c4;border-color:#f4c430;font-weight:700}
+[class*="_cellule_question"]{font-size:1rem;font-weight:600;line-height:1.6;padding:12px 0 10px 0;color:#1a1a2e}
+[class*="_cellule_explication_avec"]{background:#fff9c4;border:2px solid #f4c430;border-radius:8px;padding:14px 16px;font-size:.93rem;line-height:1.6;margin-top:8px}
+[class*="_cellule_explication_sans"]{display:none}
+[class*="_cellule_graphique"]{display:flex;justify-content:center;align-items:center;padding:8px 0}
+[class*="_cellule_graphique"] svg,[class*="_cellule_graphique"] img{max-width:100%;height:auto}
+.format01_grille{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.format01_cellule_question{grid-column:1/-1}
+.format01_cellule_reponse1_faux,.format01_cellule_reponse1_vrai{grid-column:1;grid-row:2}
+.format01_cellule_reponse2_faux,.format01_cellule_reponse2_vrai{grid-column:2;grid-row:2}
+.format01_cellule_reponse3_faux,.format01_cellule_reponse3_vrai{grid-column:1;grid-row:3}
+.format01_cellule_reponse4_faux,.format01_cellule_reponse4_vrai{grid-column:2;grid-row:3}
+.format01_cellule_explication_sans,.format01_cellule_explication_avec{grid-column:1/-1}
+.format02_grille{display:grid;grid-template-columns:1fr 220px;gap:8px}
+.format02_cellule_question{grid-column:1;grid-row:1}
+.format02_cellule_reponse1_faux,.format02_cellule_reponse1_vrai{grid-column:1;grid-row:2}
+.format02_cellule_reponse2_faux,.format02_cellule_reponse2_vrai{grid-column:1;grid-row:3}
+.format02_cellule_reponse3_faux,.format02_cellule_reponse3_vrai{grid-column:1;grid-row:4}
+.format02_cellule_reponse4_faux,.format02_cellule_reponse4_vrai{grid-column:1;grid-row:5}
+.format02_cellule_explication_sans,.format02_cellule_explication_avec{grid-column:1;grid-row:6}
+.format02_cellule_graphique{grid-column:2;grid-row:1/7;align-self:center}
+.format03_grille{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.format03_cellule_question{grid-column:1/-1}
+.format03_cellule_reponse1_faux,.format03_cellule_reponse1_vrai{grid-column:1}
+.format03_cellule_reponse2_faux,.format03_cellule_reponse2_vrai{grid-column:2}
+.format03_cellule_reponse3_faux,.format03_cellule_reponse3_vrai{grid-column:1}
+.format03_cellule_reponse4_faux,.format03_cellule_reponse4_vrai{grid-column:2}
+.format03_cellule_explication_sans,.format03_cellule_explication_avec{grid-column:1/-1}
+.format04_grille{display:grid;grid-template-columns:1fr;gap:8px}
+.format05_grille{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.format05_cellule_question{grid-column:1/-1}
+.format05_cellule_reponse1_faux,.format05_cellule_reponse1_vrai{grid-column:1}
+.format05_cellule_reponse2_faux,.format05_cellule_reponse2_vrai{grid-column:2}
+.format05_cellule_reponse3_faux,.format05_cellule_reponse3_vrai{grid-column:1}
+.format05_cellule_reponse4_faux,.format05_cellule_reponse4_vrai{grid-column:2}
+.format05_cellule_explication_sans,.format05_cellule_explication_avec{grid-column:1/-1}
+.format05_cellule_graphique{grid-column:1/-1;display:flex;justify-content:center}
+.format08_grille{display:grid;grid-template-columns:1fr 280px;gap:8px}
+.format08_cellule_question{grid-column:1}
+.format08_cellule_reponse1_faux,.format08_cellule_reponse1_vrai,
+.format08_cellule_reponse2_faux,.format08_cellule_reponse2_vrai,
+.format08_cellule_reponse3_faux,.format08_cellule_reponse3_vrai,
+.format08_cellule_reponse4_faux,.format08_cellule_reponse4_vrai,
+.format08_cellule_explication_sans,.format08_cellule_explication_avec{grid-column:1}
+.format08_cellule_graphique{grid-column:2;grid-row:1/8;align-self:center;display:flex;justify-content:center}
+</style>
+</head>
+<body>
+<div class="diapo-wrapper active" id="s0">
+  <div class="diapo-nav">
+    <button onclick="va(-1)" disabled>&#9664; Précédent</button>
+    <div><div class="nav-titre">Automatismes</div><div class="nav-pos">1 / 27</div></div>
+    <button onclick="va(1)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="slide-annonce"><div class="titre_annonce">Automatismes</div></div></div>
+</div>
+<div class="diapo-wrapper" id="s1">
+  <div class="diapo-nav">
+    <button onclick="va(0)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Consignes</div><div class="nav-pos">2 / 27</div></div>
+    <button onclick="va(2)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="consigne">Aucune justification n'est demandée et une seule réponse est possible par question.<br>Pour chaque question, reportez son numéro sur votre copie et indiquez votre réponse.<br><br>Si la question n'est pas un QCM alors la consigne est :<br><br>Donnez vos réponses sans justification<br>(vous pouvez, par contre, faire des calculs au brouillon)</div></div>
+</div>
+<div class="diapo-wrapper" id="s2">
+  <div class="diapo-nav">
+    <button onclick="va(1)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Question 1 / 12</div><div class="nav-pos">3 / 27</div></div>
+    <button onclick="va(3)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">1) On donne la fonction \(g\) définie pour tout  \(x\in\mathopen{[}-\frac{2}{3} ; +\infty \mathclose{[}\) par : \[g(x)=\sqrt{9x+6}\]Donner l'expression de \(g'(x)\)</div>
+  <div class="format05_cellule_explication_sans"></div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s3">
+  <div class="diapo-nav">
+    <button onclick="va(2)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Réponse 1 / 12</div><div class="nav-pos">4 / 27</div></div>
+    <button onclick="va(4)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">1) On donne la fonction \(g\) définie pour tout  \(x\in\mathopen{[}-\frac{2}{3} ; +\infty \mathclose{[}\) par : \[g(x)=\sqrt{9x+6}\]Donner l'expression de \(g'(x)\)</div>
+  <div class="format05_cellule_explication_avec">La fonction \(g\) est la composée de la fonction racine carrée avec une fonction définie et strictement positive sur  \(\mathopen{]}-\frac{2}{3} ; +\infty \mathclose{[}\).<br>\(g\) est donc dérivable sur  \(\mathopen{]}-\frac{2}{3} ; +\infty \mathclose{[}\)  et pour tout  \(x\in\mathopen{]}-\frac{2}{3} ; +\infty \mathclose{[}\),\[g'(x)=\frac{9}{2\sqrt{9x+6}}\]</div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s4">
+  <div class="diapo-nav">
+    <button onclick="va(3)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Question 2 / 12</div><div class="nav-pos">5 / 27</div></div>
+    <button onclick="va(5)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">2) On donne la fonction \(h\) définie pour tout  \(x\in\mathbb{R}\backslash\lbrace{\frac{4}{9}}\rbrace\) par : \[h(x)=\frac{6x+7}{9x-4}\]Donner l'expression de \(h'(x)\)</div>
+  <div class="format05_cellule_explication_sans"></div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s5">
+  <div class="diapo-nav">
+    <button onclick="va(4)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Réponse 2 / 12</div><div class="nav-pos">6 / 27</div></div>
+    <button onclick="va(6)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">2) On donne la fonction \(h\) définie pour tout  \(x\in\mathbb{R}\backslash\lbrace{\frac{4}{9}}\rbrace\) par : \[h(x)=\frac{6x+7}{9x-4}\]Donner l'expression de \(h'(x)\)</div>
+  <div class="format05_cellule_explication_avec">La fonction \(h\) est un quotient de fonctions définies et dérivables sur \(\mathbb{R}\backslash\lbrace{\frac{4}{9}}\rbrace\) de plus le dénominteur ne s'annule pas sur \(\mathbb{R}\backslash\lbrace{\frac{4}{9}}\rbrace\).<br>\(h\) est donc dérivable sur \(\mathbb{R}\backslash\lbrace{\frac{4}{9}}\rbrace\) et pour tout  \(x\in\mathbb{R}\backslash\lbrace{\frac{4}{9}}\rbrace\),<br><br>\(h'(x)=\frac{6(9x-4) -9(6x+7)}{(9x-4)^2}\)<br> Ainsi : <br>\[\forall x \in\mathbb{R}\backslash\lbrace{\frac{4}{9}}\rbrace,\;\;\;h'(x)=\frac{-87}{(9x-4)^2}\]</div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s6">
+  <div class="diapo-nav">
+    <button onclick="va(5)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Question 3 / 12</div><div class="nav-pos">7 / 27</div></div>
+    <button onclick="va(7)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">3) On donne la fonction \(g\) définie pour tout  \(x\in\mathbb{R}\backslash\lbrace{1}\rbrace\) par : \[g(x)=\frac{1}{-10x+10}\]Donner l'expression de \(g'(x)\)</div>
+  <div class="format05_cellule_explication_sans"></div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s7">
+  <div class="diapo-nav">
+    <button onclick="va(6)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Réponse 3 / 12</div><div class="nav-pos">8 / 27</div></div>
+    <button onclick="va(8)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">3) On donne la fonction \(g\) définie pour tout  \(x\in\mathbb{R}\backslash\lbrace{1}\rbrace\) par : \[g(x)=\frac{1}{-10x+10}\]Donner l'expression de \(g'(x)\)</div>
+  <div class="format05_cellule_explication_avec">La fonction \(g\) est l'inverse d'une fonction dérivable qui ne s'annule pas sur \(\mathbb{R}\backslash\lbrace{1}\rbrace \).<br>\(g\) est donc dérivable sur \(\mathbb{R}\backslash\lbrace{1}\rbrace \) et pour tout  \(x\in\mathbb{R}\backslash\lbrace{1}\rbrace \),\[g'(x)=\frac{10}{(-10x+10)^2}\]</div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s8">
+  <div class="diapo-nav">
+    <button onclick="va(7)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Question 4 / 12</div><div class="nav-pos">9 / 27</div></div>
+    <button onclick="va(9)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">4) Développer et réduire l'expression.<br>\( (9z-6)(5z+5)\)</div>
+  <div class="format05_cellule_explication_sans"></div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s9">
+  <div class="diapo-nav">
+    <button onclick="va(8)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Réponse 4 / 12</div><div class="nav-pos">10 / 27</div></div>
+    <button onclick="va(10)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">4) Développer et réduire l'expression.<br>\( (9z-6)(5z+5)\)</div>
+  <div class="format05_cellule_explication_avec">\(45z^2+15z-30\)<br><br>
+</div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s10">
+  <div class="diapo-nav">
+    <button onclick="va(9)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Question 5 / 12</div><div class="nav-pos">11 / 27</div></div>
+    <button onclick="va(11)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">5) Développer et réduire l'expression.<br>\( (4h+5)(5h+2)\)</div>
+  <div class="format05_cellule_explication_sans"></div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s11">
+  <div class="diapo-nav">
+    <button onclick="va(10)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Réponse 5 / 12</div><div class="nav-pos">12 / 27</div></div>
+    <button onclick="va(12)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">5) Développer et réduire l'expression.<br>\( (4h+5)(5h+2)\)</div>
+  <div class="format05_cellule_explication_avec">\(20h^2+33h+10\)<br><br>
+</div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s12">
+  <div class="diapo-nav">
+    <button onclick="va(11)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Question 6 / 12</div><div class="nav-pos">13 / 27</div></div>
+    <button onclick="va(13)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">6) Développer et réduire l'expression.<br>\( (8y-5)(9y-9)\)</div>
+  <div class="format05_cellule_explication_sans"></div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s13">
+  <div class="diapo-nav">
+    <button onclick="va(12)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Réponse 6 / 12</div><div class="nav-pos">14 / 27</div></div>
+    <button onclick="va(14)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">6) Développer et réduire l'expression.<br>\( (8y-5)(9y-9)\)</div>
+  <div class="format05_cellule_explication_avec">\(72y^2-117y+45\)<br><br>
+</div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s14">
+  <div class="diapo-nav">
+    <button onclick="va(13)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Question 7 / 12</div><div class="nav-pos">15 / 27</div></div>
+    <button onclick="va(15)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">7) On donne la fonction \(f\) définie pour tout  \(x\in\mathopen{[}\frac{4}{3} ; +\infty \mathclose{[}\) par : \[f(x)=\sqrt{3x-4}\]Donner l'expression de \(f'(x)\)</div>
+  <div class="format05_cellule_explication_sans"></div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s15">
+  <div class="diapo-nav">
+    <button onclick="va(14)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Réponse 7 / 12</div><div class="nav-pos">16 / 27</div></div>
+    <button onclick="va(16)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">7) On donne la fonction \(f\) définie pour tout  \(x\in\mathopen{[}\frac{4}{3} ; +\infty \mathclose{[}\) par : \[f(x)=\sqrt{3x-4}\]Donner l'expression de \(f'(x)\)</div>
+  <div class="format05_cellule_explication_avec">La fonction \(f\) est la composée de la fonction racine carrée avec une fonction définie et strictement positive sur  \(\mathopen{]}\frac{4}{3} ; +\infty \mathclose{[}\).<br>\(f\) est donc dérivable sur  \(\mathopen{]}\frac{4}{3} ; +\infty \mathclose{[}\)  et pour tout  \(x\in\mathopen{]}\frac{4}{3} ; +\infty \mathclose{[}\),\[f'(x)=\frac{3}{2\sqrt{3x-4}}\]</div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s16">
+  <div class="diapo-nav">
+    <button onclick="va(15)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Question 8 / 12</div><div class="nav-pos">17 / 27</div></div>
+    <button onclick="va(17)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">8) On donne la fonction \(g\) définie pour tout  \(x\in\mathbb{R}\backslash\lbrace{1}\rbrace\) par : \[g(x)=\frac{7x-3}{6x-6}\]Donner l'expression de \(g'(x)\)</div>
+  <div class="format05_cellule_explication_sans"></div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s17">
+  <div class="diapo-nav">
+    <button onclick="va(16)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Réponse 8 / 12</div><div class="nav-pos">18 / 27</div></div>
+    <button onclick="va(18)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">8) On donne la fonction \(g\) définie pour tout  \(x\in\mathbb{R}\backslash\lbrace{1}\rbrace\) par : \[g(x)=\frac{7x-3}{6x-6}\]Donner l'expression de \(g'(x)\)</div>
+  <div class="format05_cellule_explication_avec">La fonction \(g\) est un quotient de fonctions définies et dérivables sur \(\mathbb{R}\backslash\lbrace{1}\rbrace\) de plus le dénominteur ne s'annule pas sur \(\mathbb{R}\backslash\lbrace{1}\rbrace\).<br>\(g\) est donc dérivable sur \(\mathbb{R}\backslash\lbrace{1}\rbrace\) et pour tout  \(x\in\mathbb{R}\backslash\lbrace{1}\rbrace\),<br><br>\(g'(x)=\frac{7(6x-6) -6(7x-3)}{(6x-6)^2}\)<br> Ainsi : <br>\[\forall x \in\mathbb{R}\backslash\lbrace{1}\rbrace,\;\;\;g'(x)=\frac{-24}{(6x-6)^2}\]</div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s18">
+  <div class="diapo-nav">
+    <button onclick="va(17)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Question 9 / 12</div><div class="nav-pos">19 / 27</div></div>
+    <button onclick="va(19)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">9) On donne la fonction \(h\) définie pour tout  \(x\in\mathbb{R}\backslash\lbrace{5}\rbrace\) par : \[h(x)=\frac{1}{-2x+10}\]Donner l'expression de \(h'(x)\)</div>
+  <div class="format05_cellule_explication_sans"></div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s19">
+  <div class="diapo-nav">
+    <button onclick="va(18)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Réponse 9 / 12</div><div class="nav-pos">20 / 27</div></div>
+    <button onclick="va(20)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">9) On donne la fonction \(h\) définie pour tout  \(x\in\mathbb{R}\backslash\lbrace{5}\rbrace\) par : \[h(x)=\frac{1}{-2x+10}\]Donner l'expression de \(h'(x)\)</div>
+  <div class="format05_cellule_explication_avec">La fonction \(h\) est l'inverse d'une fonction dérivable qui ne s'annule pas sur \(\mathbb{R}\backslash\lbrace{5}\rbrace \).<br>\(h\) est donc dérivable sur \(\mathbb{R}\backslash\lbrace{5}\rbrace \) et pour tout  \(x\in\mathbb{R}\backslash\lbrace{5}\rbrace \),\[h'(x)=\frac{2}{(-2x+10)^2}\]</div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s20">
+  <div class="diapo-nav">
+    <button onclick="va(19)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Question 10 / 12</div><div class="nav-pos">21 / 27</div></div>
+    <button onclick="va(21)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">10) Développer et réduire l'expression.<br>\( (3x-5)(4x+9)\)</div>
+  <div class="format05_cellule_explication_sans"></div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s21">
+  <div class="diapo-nav">
+    <button onclick="va(20)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Réponse 10 / 12</div><div class="nav-pos">22 / 27</div></div>
+    <button onclick="va(22)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">10) Développer et réduire l'expression.<br>\( (3x-5)(4x+9)\)</div>
+  <div class="format05_cellule_explication_avec">\(12x^2+7x-45\)<br><br>
+</div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s22">
+  <div class="diapo-nav">
+    <button onclick="va(21)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Question 11 / 12</div><div class="nav-pos">23 / 27</div></div>
+    <button onclick="va(23)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">11) Développer et réduire l'expression.<br>\( (10h+7)(9h+7)\)</div>
+  <div class="format05_cellule_explication_sans"></div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s23">
+  <div class="diapo-nav">
+    <button onclick="va(22)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Réponse 11 / 12</div><div class="nav-pos">24 / 27</div></div>
+    <button onclick="va(24)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">11) Développer et réduire l'expression.<br>\( (10h+7)(9h+7)\)</div>
+  <div class="format05_cellule_explication_avec">\(90h^2+133h+49\)<br><br>
+</div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s24">
+  <div class="diapo-nav">
+    <button onclick="va(23)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Question 12 / 12</div><div class="nav-pos">25 / 27</div></div>
+    <button onclick="va(25)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">12) Développer et réduire l'expression.<br>\( (6z-4)(6z-9)\)</div>
+  <div class="format05_cellule_explication_sans"></div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s25">
+  <div class="diapo-nav">
+    <button onclick="va(24)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Réponse 12 / 12</div><div class="nav-pos">26 / 27</div></div>
+    <button onclick="va(26)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format05_grille">
+  <div class="format05_cellule_question">12) Développer et réduire l'expression.<br>\( (6z-4)(6z-9)\)</div>
+  <div class="format05_cellule_explication_avec">\(36z^2-78z+36\)<br><br>
+</div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s26">
+  <div class="diapo-nav">
+    <button onclick="va(25)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Fin</div><div class="nav-pos">27 / 27</div></div>
+    <button onclick="va(27)" disabled>Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="slide-annonce"><div class="titre_annonce">Fin</div></div></div>
+</div>
+<script>
+var _i=0,_t=27;
+function va(n){
+  if(n<0||n>=_t)return;
+  document.getElementById('s'+_i).classList.remove('active');
+  _i=n;
+  var el=document.getElementById('s'+_i);
+  el.classList.add('active');
+  if(window.MathJax&&MathJax.Hub)MathJax.Hub.Queue(['Typeset',MathJax.Hub,el]);
+  window.scrollTo(0,0);
+}
+document.addEventListener('keydown',function(e){
+  if(e.key==='ArrowRight'||e.key===' ')va(_i+1);
+  if(e.key==='ArrowLeft')va(_i-1);
+});
+</script>
+</body>
+</html>
