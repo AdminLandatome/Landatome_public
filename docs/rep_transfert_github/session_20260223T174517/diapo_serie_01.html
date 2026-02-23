@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Automatismes</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" type="image/png" href="https://AdminLandatome.github.io/LANDATOME/00_images/MC-Escher-Impossible-Cube.png"/>
+<script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI",Helvetica,Arial,sans-serif;background:#f0f2f5;color:#1a1a2e}
+.diapo-wrapper{display:none;flex-direction:column;min-height:100vh}
+.diapo-wrapper.active{display:flex}
+.diapo-nav{display:flex;align-items:center;justify-content:space-between;background:#1d3557;color:#fff;padding:10px 20px;user-select:none}
+.diapo-nav .nav-titre{font-weight:700;font-size:1rem;letter-spacing:.03em}
+.diapo-nav .nav-pos{font-size:.8rem;opacity:.65}
+.diapo-nav button{background:rgba(255,255,255,.15);border:none;color:#fff;padding:8px 18px;border-radius:6px;font-size:.9rem;font-weight:700;cursor:pointer;transition:background .15s}
+.diapo-nav button:hover{background:rgba(255,255,255,.3)}
+.diapo-nav button:disabled{opacity:.3;cursor:default}
+.diapo-content{flex:1;padding:28px 36px;max-width:960px;margin:0 auto;width:100%}
+.slide-annonce{display:flex;align-items:center;justify-content:center;flex:1;min-height:60vh}
+.titre_annonce{font-size:2.5rem;font-weight:900;color:#1d3557;text-align:center;letter-spacing:.05em}
+.consigne{font-size:.95rem;line-height:1.8;color:#333;background:#f8f9fa;border-left:4px solid #457b9d;padding:16px 20px;border-radius:0 8px 8px 0;max-width:700px;margin:40px auto}
+[class*="_cellule_reponse"]{padding:10px 14px;border:2px solid #ccc;border-radius:8px;font-size:.93rem;line-height:1.5;background:#fff}
+[class*="_cellule_reponse"][class$="_vrai"]{background:#fff9c4;border-color:#f4c430;font-weight:700}
+[class*="_cellule_question"]{font-size:1rem;font-weight:600;line-height:1.6;padding:12px 0 10px 0;color:#1a1a2e}
+[class*="_cellule_explication_avec"]{background:#fff9c4;border:2px solid #f4c430;border-radius:8px;padding:14px 16px;font-size:.93rem;line-height:1.6;margin-top:8px}
+[class*="_cellule_explication_sans"]{display:none}
+[class*="_cellule_graphique"]{display:flex;justify-content:center;align-items:center;padding:8px 0}
+[class*="_cellule_graphique"] svg,[class*="_cellule_graphique"] img{max-width:100%;height:auto}
+.format01_grille{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.format01_cellule_question{grid-column:1/-1}
+.format01_cellule_reponse1_faux,.format01_cellule_reponse1_vrai{grid-column:1;grid-row:2}
+.format01_cellule_reponse2_faux,.format01_cellule_reponse2_vrai{grid-column:2;grid-row:2}
+.format01_cellule_reponse3_faux,.format01_cellule_reponse3_vrai{grid-column:1;grid-row:3}
+.format01_cellule_reponse4_faux,.format01_cellule_reponse4_vrai{grid-column:2;grid-row:3}
+.format01_cellule_explication_sans,.format01_cellule_explication_avec{grid-column:1/-1}
+.format02_grille{display:grid;grid-template-columns:1fr 220px;gap:8px}
+.format02_cellule_question{grid-column:1;grid-row:1}
+.format02_cellule_reponse1_faux,.format02_cellule_reponse1_vrai{grid-column:1;grid-row:2}
+.format02_cellule_reponse2_faux,.format02_cellule_reponse2_vrai{grid-column:1;grid-row:3}
+.format02_cellule_reponse3_faux,.format02_cellule_reponse3_vrai{grid-column:1;grid-row:4}
+.format02_cellule_reponse4_faux,.format02_cellule_reponse4_vrai{grid-column:1;grid-row:5}
+.format02_cellule_explication_sans,.format02_cellule_explication_avec{grid-column:1;grid-row:6}
+.format02_cellule_graphique{grid-column:2;grid-row:1/7;align-self:center}
+.format03_grille{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.format03_cellule_question{grid-column:1/-1}
+.format03_cellule_reponse1_faux,.format03_cellule_reponse1_vrai{grid-column:1}
+.format03_cellule_reponse2_faux,.format03_cellule_reponse2_vrai{grid-column:2}
+.format03_cellule_reponse3_faux,.format03_cellule_reponse3_vrai{grid-column:1}
+.format03_cellule_reponse4_faux,.format03_cellule_reponse4_vrai{grid-column:2}
+.format03_cellule_explication_sans,.format03_cellule_explication_avec{grid-column:1/-1}
+.format04_grille{display:grid;grid-template-columns:1fr;gap:8px}
+.format05_grille{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.format05_cellule_question{grid-column:1/-1}
+.format05_cellule_reponse1_faux,.format05_cellule_reponse1_vrai{grid-column:1}
+.format05_cellule_reponse2_faux,.format05_cellule_reponse2_vrai{grid-column:2}
+.format05_cellule_reponse3_faux,.format05_cellule_reponse3_vrai{grid-column:1}
+.format05_cellule_reponse4_faux,.format05_cellule_reponse4_vrai{grid-column:2}
+.format05_cellule_explication_sans,.format05_cellule_explication_avec{grid-column:1/-1}
+.format05_cellule_graphique{grid-column:1/-1;display:flex;justify-content:center}
+.format08_grille{display:grid;grid-template-columns:1fr 280px;gap:8px}
+.format08_cellule_question{grid-column:1}
+.format08_cellule_reponse1_faux,.format08_cellule_reponse1_vrai,
+.format08_cellule_reponse2_faux,.format08_cellule_reponse2_vrai,
+.format08_cellule_reponse3_faux,.format08_cellule_reponse3_vrai,
+.format08_cellule_reponse4_faux,.format08_cellule_reponse4_vrai,
+.format08_cellule_explication_sans,.format08_cellule_explication_avec{grid-column:1}
+.format08_cellule_graphique{grid-column:2;grid-row:1/8;align-self:center;display:flex;justify-content:center}
+</style>
+</head>
+<body>
+<div class="diapo-wrapper active" id="s0">
+  <div class="diapo-nav">
+    <button onclick="va(-1)" disabled>&#9664; Précédent</button>
+    <div><div class="nav-titre">Automatismes</div><div class="nav-pos">1 / 11</div></div>
+    <button onclick="va(1)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="slide-annonce"><div class="titre_annonce">Automatismes</div></div></div>
+</div>
+<div class="diapo-wrapper" id="s1">
+  <div class="diapo-nav">
+    <button onclick="va(0)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Consignes</div><div class="nav-pos">2 / 11</div></div>
+    <button onclick="va(2)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="consigne">Aucune justification n'est demandée et une seule réponse est possible par question.<br>Pour chaque question, reportez son numéro sur votre copie et indiquez votre réponse.<br><br>Si la question n'est pas un QCM alors la consigne est :<br><br>Donnez vos réponses sans justification<br>(vous pouvez, par contre, faire des calculs au brouillon)</div></div>
+</div>
+<div class="diapo-wrapper" id="s2">
+  <div class="diapo-nav">
+    <button onclick="va(1)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Question 1 / 4</div><div class="nav-pos">3 / 11</div></div>
+    <button onclick="va(3)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format01_grille">
+  <div class="format01_cellule_question">1) L'inverse du triple de 2 est :</div>
+  <div class="format01_cellule_reponse1_faux">a) \(\frac{3}{2}\)</div>
+  <div class="format01_cellule_reponse2_faux">b) \(\frac{1}{6}\)</div>
+  <div class="format01_cellule_reponse3_faux">c) \(6\)</div>
+  <div class="format01_cellule_reponse4_faux">d) \(\frac{2}{3}\)</div>
+  <div class="format01_cellule_explication_sans"></div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s3">
+  <div class="diapo-nav">
+    <button onclick="va(2)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Réponse 1 / 4</div><div class="nav-pos">4 / 11</div></div>
+    <button onclick="va(4)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format01_grille">
+  <div class="format01_cellule_question">1) L'inverse du triple de 2 est :</div>
+  <div class="format01_cellule_reponse1_faux">a) \(\frac{3}{2}\)</div>
+  <div class="format01_cellule_reponse2_vrai">b) \(\frac{1}{6}\)</div>
+  <div class="format01_cellule_reponse3_faux">c) \(6\)</div>
+  <div class="format01_cellule_reponse4_faux">d) \(\frac{2}{3}\)</div>
+  <div class="format01_cellule_explication_sans"></div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s4">
+  <div class="diapo-nav">
+    <button onclick="va(3)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Question 2 / 4</div><div class="nav-pos">5 / 11</div></div>
+    <button onclick="va(5)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format03_grille">
+  <div class="format03_cellule_question">2) Une hausse de 40 % suivie d'une diminution de 70 % équivaut à :</div>
+  <div class="format03_cellule_reponse1_faux">a) une diminution de 58 %</div>
+  <div class="format03_cellule_reponse2_faux">b) une diminution de 30 %</div>
+  <div class="format03_cellule_reponse3_faux">c) une augmentation de 2 %</div>
+  <div class="format03_cellule_reponse4_faux">d) une augmentation de 42 %</div>
+  <div class="format03_cellule_explication_sans"></div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s5">
+  <div class="diapo-nav">
+    <button onclick="va(4)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Réponse 2 / 4</div><div class="nav-pos">6 / 11</div></div>
+    <button onclick="va(6)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format03_grille">
+  <div class="format03_cellule_question">2) Une hausse de 40 % suivie d'une diminution de 70 % équivaut à :</div>
+  <div class="format03_cellule_reponse1_vrai">a) une diminution de 58 %</div>
+  <div class="format03_cellule_reponse2_faux">b) une diminution de 30 %</div>
+  <div class="format03_cellule_reponse3_faux">c) une augmentation de 2 %</div>
+  <div class="format03_cellule_reponse4_faux">d) une augmentation de 42 %</div>
+  <div class="format03_cellule_explication_sans"></div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s6">
+  <div class="diapo-nav">
+    <button onclick="va(5)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Question 3 / 4</div><div class="nav-pos">7 / 11</div></div>
+    <button onclick="va(7)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format02_grille">
+  <div class="format02_cellule_question">3) On a représenté ci-contre la parabole d'équation \(y=x^2\).<br>On note \((I)\) l'inéquation, sur \(\mathbb{R}\) , \(x^2\gt{2}\).<br>L'ensemble des solutions \(S\) de cette inéquation est :</div>
+  <div class="format02_cellule_reponse1_faux">a) \(S= \mathopen{]} - \infty ; -\sqrt{2}\; \mathclose{]} \cup \mathopen{[} \sqrt{2} ; +\infty \mathclose{[}\)</div>
+  <div class="format02_cellule_reponse2_faux">b) \(S= \mathopen{]}-\sqrt{2}; \sqrt{2}\; \mathclose{[}\)</div>
+  <div class="format02_cellule_reponse3_faux">c) \(S= \mathopen{]} - \infty ; -\sqrt{2}\; \mathclose{[} \cup \mathopen{]} \sqrt{2} ; +\infty \mathclose{[}\)</div>
+  <div class="format02_cellule_reponse4_faux">d) \(S=\left\{ -\sqrt{2} ; \sqrt{2} \right\}\)</div>
+  <div class="format02_cellule_explication_sans"></div>
+  <div class="format02_cellule_graphique"><svg viewBox="0 0 400 400" width="100%" style="max-width:400px; height:auto;">
+<line x1="0" y1="200" x2="400" y2="200" style="stroke:rgb(0,0,0);stroke-width:3;"/>
+<line x1="400" y1="200" x2="392" y2="208" style="stroke:rgb(0,0,0);stroke-width:3;"/>
+<line x1="400" y1="200" x2="392" y2="192" style="stroke:rgb(0,0,0);stroke-width:3;"/>
+<line x1="200" y1="400" x2="200" y2="0" style="stroke:rgb(0,0,0);stroke-width:3;"/>
+<line x1="200" y1="0" x2="208" y2="8" style="stroke:rgb(0,0,0);stroke-width:3;"/>
+<line x1="200" y1="0" x2="192" y2="8" style="stroke:rgb(0,0,0);stroke-width:3;"/>
+<line x1="192" y1="120" x2="208" y2="120" style="stroke:rgb(0,0,0);stroke-width:3;"/>
+<line x1="200" y1="112" x2="200" y2="128" style="stroke:rgb(0,0,0);stroke-width:3;"/>
+<text x="216" y="136" style="font-size:80%; stroke:rgb(0,0,0);">2</text>
+<polyline fill="none" stroke="rgb(0,0,0)" stroke-width="3" points="0,0 4,7.9199999999999875 8,15.680000000000007 12,23.28 16,30.720000000000027 20,38 24,45.119999999999976 28,52.08000000000001 32,58.879999999999995 36,65.52000000000001 40,72 44,78.32000000000001 48,84.48 52,90.47999999999999 56,96.31999999999998 60,102 64,107.51999999999998 68,112.88 72,118.07999999999998 76,123.11999999999999 80,127.99999999999999 84,132.72 88,137.28 92,141.68 96,145.92 100,150 104,153.92000000000002 108,157.68 112,161.28 116,164.72 120,168 124,171.12 128,174.07999999999998 132,176.88 136,179.51999999999998 140,182 144,184.32 148,186.48 152,188.48 156,190.32 160,192 164,193.52 168,194.88 172,196.08 176,197.12 180,198 184,198.72 188,199.28 192,199.68 196,199.92 200,200 204,199.92 208,199.68 212,199.28 216,198.72 220,198 224,197.12 228,196.08 232,194.88 236,193.52 240,192 244,190.32 248,188.48 252,186.48 256,184.32 260,182 264,179.51999999999998 268,176.88 272,174.07999999999998 276,171.12 280,168 284,164.72 288,161.28 292,157.68 296,153.92000000000002 300,150 304,145.92 308,141.68 312,137.28 316,132.72 320,127.99999999999999 324,123.11999999999999 328,118.07999999999998 332,112.88 336,107.51999999999998 340,102 344,96.31999999999998 348,90.47999999999999 352,84.48 356,78.32000000000001 360,72 364,65.52000000000001 368,58.879999999999995 372,52.08000000000001 376,45.119999999999976 380,38 384,30.720000000000027 388,23.28 392,15.680000000000007 396,7.9199999999999875 400,0"/>
+<text x="384" y="220" style="font-size:70%; font-style:italic; stroke:rgb(0,0,0);">x</text>
+<text x="180" y="16" style="font-size:70%; font-style:italic; stroke:rgb(0,0,0);">y</text>
+</svg>
+</div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s7">
+  <div class="diapo-nav">
+    <button onclick="va(6)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Réponse 3 / 4</div><div class="nav-pos">8 / 11</div></div>
+    <button onclick="va(8)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format02_grille">
+  <div class="format02_cellule_question">3) On a représenté ci-contre la parabole d'équation \(y=x^2\).<br>On note \((I)\) l'inéquation, sur \(\mathbb{R}\) , \(x^2\gt{2}\).<br>L'ensemble des solutions \(S\) de cette inéquation est :</div>
+  <div class="format02_cellule_reponse1_faux">a) \(S= \mathopen{]} - \infty ; -\sqrt{2}\; \mathclose{]} \cup \mathopen{[} \sqrt{2} ; +\infty \mathclose{[}\)</div>
+  <div class="format02_cellule_reponse2_faux">b) \(S= \mathopen{]}-\sqrt{2}; \sqrt{2}\; \mathclose{[}\)</div>
+  <div class="format02_cellule_reponse3_vrai">c) \(S= \mathopen{]} - \infty ; -\sqrt{2}\; \mathclose{[} \cup \mathopen{]} \sqrt{2} ; +\infty \mathclose{[}\)</div>
+  <div class="format02_cellule_reponse4_faux">d) \(S=\left\{ -\sqrt{2} ; \sqrt{2} \right\}\)</div>
+  <div class="format02_cellule_explication_sans"></div>
+  <div class="format02_cellule_graphique"><svg viewBox="0 0 400 400" width="100%" style="max-width:400px; height:auto;">
+<line x1="0" y1="200" x2="400" y2="200" style="stroke:rgb(0,0,0);stroke-width:3;"/>
+<line x1="400" y1="200" x2="392" y2="208" style="stroke:rgb(0,0,0);stroke-width:3;"/>
+<line x1="400" y1="200" x2="392" y2="192" style="stroke:rgb(0,0,0);stroke-width:3;"/>
+<line x1="200" y1="400" x2="200" y2="0" style="stroke:rgb(0,0,0);stroke-width:3;"/>
+<line x1="200" y1="0" x2="208" y2="8" style="stroke:rgb(0,0,0);stroke-width:3;"/>
+<line x1="200" y1="0" x2="192" y2="8" style="stroke:rgb(0,0,0);stroke-width:3;"/>
+<line x1="192" y1="120" x2="208" y2="120" style="stroke:rgb(0,0,0);stroke-width:3;"/>
+<line x1="200" y1="112" x2="200" y2="128" style="stroke:rgb(0,0,0);stroke-width:3;"/>
+<text x="216" y="136" style="font-size:80%; stroke:rgb(0,0,0);">2</text>
+<polyline fill="none" stroke="rgb(0,0,0)" stroke-width="3" points="0,0 4,7.9199999999999875 8,15.680000000000007 12,23.28 16,30.720000000000027 20,38 24,45.119999999999976 28,52.08000000000001 32,58.879999999999995 36,65.52000000000001 40,72 44,78.32000000000001 48,84.48 52,90.47999999999999 56,96.31999999999998 60,102 64,107.51999999999998 68,112.88 72,118.07999999999998 76,123.11999999999999 80,127.99999999999999 84,132.72 88,137.28 92,141.68 96,145.92 100,150 104,153.92000000000002 108,157.68 112,161.28 116,164.72 120,168 124,171.12 128,174.07999999999998 132,176.88 136,179.51999999999998 140,182 144,184.32 148,186.48 152,188.48 156,190.32 160,192 164,193.52 168,194.88 172,196.08 176,197.12 180,198 184,198.72 188,199.28 192,199.68 196,199.92 200,200 204,199.92 208,199.68 212,199.28 216,198.72 220,198 224,197.12 228,196.08 232,194.88 236,193.52 240,192 244,190.32 248,188.48 252,186.48 256,184.32 260,182 264,179.51999999999998 268,176.88 272,174.07999999999998 276,171.12 280,168 284,164.72 288,161.28 292,157.68 296,153.92000000000002 300,150 304,145.92 308,141.68 312,137.28 316,132.72 320,127.99999999999999 324,123.11999999999999 328,118.07999999999998 332,112.88 336,107.51999999999998 340,102 344,96.31999999999998 348,90.47999999999999 352,84.48 356,78.32000000000001 360,72 364,65.52000000000001 368,58.879999999999995 372,52.08000000000001 376,45.119999999999976 380,38 384,30.720000000000027 388,23.28 392,15.680000000000007 396,7.9199999999999875 400,0"/>
+<text x="384" y="220" style="font-size:70%; font-style:italic; stroke:rgb(0,0,0);">x</text>
+<text x="180" y="16" style="font-size:70%; font-style:italic; stroke:rgb(0,0,0);">y</text>
+</svg>
+</div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s8">
+  <div class="diapo-nav">
+    <button onclick="va(7)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Question 4 / 4</div><div class="nav-pos">9 / 11</div></div>
+    <button onclick="va(9)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format02_grille">
+  <div class="format02_cellule_question">4) On a représenté ci-contre la parabole d'équation \(y=x^2\).<br>On note \((I)\) l'inéquation, sur \(\mathbb{R}\) , \(x^2\geq{2}\).<br>L'ensemble des solutions \(S\) de cette inéquation est :</div>
+  <div class="format02_cellule_reponse1_faux">a) \(S= \mathopen{]} - \infty ; -\sqrt{2} \mathclose{[} \cup \mathopen{]} \sqrt{2} ; +\infty \mathclose{[}\)</div>
+  <div class="format02_cellule_reponse2_faux">b) \(S=\left\{ -\sqrt{2} ; \sqrt{2} \right\}\)</div>
+  <div class="format02_cellule_reponse3_faux">c) \(S= \mathopen{]} - \infty ; -\sqrt{2}\; \mathclose{]} \cup \mathopen{[} \sqrt{2} ; +\infty \mathclose{[}\)</div>
+  <div class="format02_cellule_reponse4_faux">d) \(S= \mathopen{[}-\sqrt{2}; \sqrt{2}\; \mathclose{]}\)</div>
+  <div class="format02_cellule_explication_sans"></div>
+  <div class="format02_cellule_graphique"><svg viewBox="0 0 400 400" width="100%" style="max-width:400px; height:auto;">
+<line x1="0" y1="200" x2="400" y2="200" style="stroke:rgb(0,0,0);stroke-width:3;"/>
+<line x1="400" y1="200" x2="392" y2="208" style="stroke:rgb(0,0,0);stroke-width:3;"/>
+<line x1="400" y1="200" x2="392" y2="192" style="stroke:rgb(0,0,0);stroke-width:3;"/>
+<line x1="200" y1="400" x2="200" y2="0" style="stroke:rgb(0,0,0);stroke-width:3;"/>
+<line x1="200" y1="0" x2="208" y2="8" style="stroke:rgb(0,0,0);stroke-width:3;"/>
+<line x1="200" y1="0" x2="192" y2="8" style="stroke:rgb(0,0,0);stroke-width:3;"/>
+<line x1="192" y1="120" x2="208" y2="120" style="stroke:rgb(0,0,0);stroke-width:3;"/>
+<line x1="200" y1="112" x2="200" y2="128" style="stroke:rgb(0,0,0);stroke-width:3;"/>
+<text x="216" y="136" style="font-size:80%; stroke:rgb(0,0,0);">2</text>
+<polyline fill="none" stroke="rgb(0,0,0)" stroke-width="3" points="0,0 4,7.9199999999999875 8,15.680000000000007 12,23.28 16,30.720000000000027 20,38 24,45.119999999999976 28,52.08000000000001 32,58.879999999999995 36,65.52000000000001 40,72 44,78.32000000000001 48,84.48 52,90.47999999999999 56,96.31999999999998 60,102 64,107.51999999999998 68,112.88 72,118.07999999999998 76,123.11999999999999 80,127.99999999999999 84,132.72 88,137.28 92,141.68 96,145.92 100,150 104,153.92000000000002 108,157.68 112,161.28 116,164.72 120,168 124,171.12 128,174.07999999999998 132,176.88 136,179.51999999999998 140,182 144,184.32 148,186.48 152,188.48 156,190.32 160,192 164,193.52 168,194.88 172,196.08 176,197.12 180,198 184,198.72 188,199.28 192,199.68 196,199.92 200,200 204,199.92 208,199.68 212,199.28 216,198.72 220,198 224,197.12 228,196.08 232,194.88 236,193.52 240,192 244,190.32 248,188.48 252,186.48 256,184.32 260,182 264,179.51999999999998 268,176.88 272,174.07999999999998 276,171.12 280,168 284,164.72 288,161.28 292,157.68 296,153.92000000000002 300,150 304,145.92 308,141.68 312,137.28 316,132.72 320,127.99999999999999 324,123.11999999999999 328,118.07999999999998 332,112.88 336,107.51999999999998 340,102 344,96.31999999999998 348,90.47999999999999 352,84.48 356,78.32000000000001 360,72 364,65.52000000000001 368,58.879999999999995 372,52.08000000000001 376,45.119999999999976 380,38 384,30.720000000000027 388,23.28 392,15.680000000000007 396,7.9199999999999875 400,0"/>
+<text x="384" y="220" style="font-size:70%; font-style:italic; stroke:rgb(0,0,0);">x</text>
+<text x="180" y="16" style="font-size:70%; font-style:italic; stroke:rgb(0,0,0);">y</text>
+</svg>
+</div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s9">
+  <div class="diapo-nav">
+    <button onclick="va(8)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Réponse 4 / 4</div><div class="nav-pos">10 / 11</div></div>
+    <button onclick="va(10)">Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="format02_grille">
+  <div class="format02_cellule_question">4) On a représenté ci-contre la parabole d'équation \(y=x^2\).<br>On note \((I)\) l'inéquation, sur \(\mathbb{R}\) , \(x^2\geq{2}\).<br>L'ensemble des solutions \(S\) de cette inéquation est :</div>
+  <div class="format02_cellule_reponse1_faux">a) \(S= \mathopen{]} - \infty ; -\sqrt{2} \mathclose{[} \cup \mathopen{]} \sqrt{2} ; +\infty \mathclose{[}\)</div>
+  <div class="format02_cellule_reponse2_faux">b) \(S=\left\{ -\sqrt{2} ; \sqrt{2} \right\}\)</div>
+  <div class="format02_cellule_reponse3_vrai">c) \(S= \mathopen{]} - \infty ; -\sqrt{2}\; \mathclose{]} \cup \mathopen{[} \sqrt{2} ; +\infty \mathclose{[}\)</div>
+  <div class="format02_cellule_reponse4_faux">d) \(S= \mathopen{[}-\sqrt{2}; \sqrt{2}\; \mathclose{]}\)</div>
+  <div class="format02_cellule_explication_sans"></div>
+  <div class="format02_cellule_graphique"><svg viewBox="0 0 400 400" width="100%" style="max-width:400px; height:auto;">
+<line x1="0" y1="200" x2="400" y2="200" style="stroke:rgb(0,0,0);stroke-width:3;"/>
+<line x1="400" y1="200" x2="392" y2="208" style="stroke:rgb(0,0,0);stroke-width:3;"/>
+<line x1="400" y1="200" x2="392" y2="192" style="stroke:rgb(0,0,0);stroke-width:3;"/>
+<line x1="200" y1="400" x2="200" y2="0" style="stroke:rgb(0,0,0);stroke-width:3;"/>
+<line x1="200" y1="0" x2="208" y2="8" style="stroke:rgb(0,0,0);stroke-width:3;"/>
+<line x1="200" y1="0" x2="192" y2="8" style="stroke:rgb(0,0,0);stroke-width:3;"/>
+<line x1="192" y1="120" x2="208" y2="120" style="stroke:rgb(0,0,0);stroke-width:3;"/>
+<line x1="200" y1="112" x2="200" y2="128" style="stroke:rgb(0,0,0);stroke-width:3;"/>
+<text x="216" y="136" style="font-size:80%; stroke:rgb(0,0,0);">2</text>
+<polyline fill="none" stroke="rgb(0,0,0)" stroke-width="3" points="0,0 4,7.9199999999999875 8,15.680000000000007 12,23.28 16,30.720000000000027 20,38 24,45.119999999999976 28,52.08000000000001 32,58.879999999999995 36,65.52000000000001 40,72 44,78.32000000000001 48,84.48 52,90.47999999999999 56,96.31999999999998 60,102 64,107.51999999999998 68,112.88 72,118.07999999999998 76,123.11999999999999 80,127.99999999999999 84,132.72 88,137.28 92,141.68 96,145.92 100,150 104,153.92000000000002 108,157.68 112,161.28 116,164.72 120,168 124,171.12 128,174.07999999999998 132,176.88 136,179.51999999999998 140,182 144,184.32 148,186.48 152,188.48 156,190.32 160,192 164,193.52 168,194.88 172,196.08 176,197.12 180,198 184,198.72 188,199.28 192,199.68 196,199.92 200,200 204,199.92 208,199.68 212,199.28 216,198.72 220,198 224,197.12 228,196.08 232,194.88 236,193.52 240,192 244,190.32 248,188.48 252,186.48 256,184.32 260,182 264,179.51999999999998 268,176.88 272,174.07999999999998 276,171.12 280,168 284,164.72 288,161.28 292,157.68 296,153.92000000000002 300,150 304,145.92 308,141.68 312,137.28 316,132.72 320,127.99999999999999 324,123.11999999999999 328,118.07999999999998 332,112.88 336,107.51999999999998 340,102 344,96.31999999999998 348,90.47999999999999 352,84.48 356,78.32000000000001 360,72 364,65.52000000000001 368,58.879999999999995 372,52.08000000000001 376,45.119999999999976 380,38 384,30.720000000000027 388,23.28 392,15.680000000000007 396,7.9199999999999875 400,0"/>
+<text x="384" y="220" style="font-size:70%; font-style:italic; stroke:rgb(0,0,0);">x</text>
+<text x="180" y="16" style="font-size:70%; font-style:italic; stroke:rgb(0,0,0);">y</text>
+</svg>
+</div>
+</div></div>
+</div>
+<div class="diapo-wrapper" id="s10">
+  <div class="diapo-nav">
+    <button onclick="va(9)">&#9664; Précédent</button>
+    <div><div class="nav-titre">Fin</div><div class="nav-pos">11 / 11</div></div>
+    <button onclick="va(11)" disabled>Suivant &#9654;</button>
+  </div>
+  <div class="diapo-content"><div class="slide-annonce"><div class="titre_annonce">Fin</div></div></div>
+</div>
+<script>
+var _i=0,_t=11;
+function va(n){
+  if(n<0||n>=_t)return;
+  document.getElementById('s'+_i).classList.remove('active');
+  _i=n;
+  var el=document.getElementById('s'+_i);
+  el.classList.add('active');
+  if(window.MathJax&&MathJax.Hub)MathJax.Hub.Queue(['Typeset',MathJax.Hub,el]);
+  window.scrollTo(0,0);
+}
+document.addEventListener('keydown',function(e){
+  if(e.key==='ArrowRight'||e.key===' ')va(_i+1);
+  if(e.key==='ArrowLeft')va(_i-1);
+});
+</script>
+</body>
+</html>
